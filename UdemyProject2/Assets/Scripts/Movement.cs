@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    [SerializeField] float mainThrust = 100f;
+    [SerializeField] float rotationThrust = 1f;
     Rigidbody rb;
 
     void Start()
@@ -21,7 +23,7 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddRelativeForce(Vector3.up);
+            rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
         }
     }
 
@@ -29,12 +31,19 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            Debug.Log("Rotate Left");
+            ApplyRotation(rotationThrust);
+
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("Rotate Right");
+            ApplyRotation(-rotationThrust);
         }
     }
 
+    public void ApplyRotation(float rotationThisFrame)
+    {
+        rb.freezeRotation = true;
+        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
+        rb.freezeRotation = false;
+    }
 }
